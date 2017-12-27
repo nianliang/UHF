@@ -17,26 +17,32 @@ import com.handheld.UHF.UhfManager;
  * This class echoes a string called from JavaScript.
  */
 public class UHF extends CordovaPlugin {
-    public static final String NOSUPPORT = "暂不支持UHF!";
+    public static final String NOSUPPORT = "设备不支持UHF!";
 
     @Override
-    public boolean execute(String action, JSONArray args, CallbackContext callbackContext) throws JSONException {
-        try{
-            UhfManager manager = UhfManager.getInstance();
+    public boolean execute(String action, JSONArray args,final CallbackContext callbackContext) throws JSONException {
+        final UhfManager manager = UhfManager.getInstance();
+        if(manager!=null){
             if (action.equals("getEpcList")) {
-                this.getEPCList(manager,callbackContext);
-                manager.close();
+                cordova.getThreadPool().execute(new Runnable() {
+                    public void run() {
+                        getEPCList(manager,callbackContext);
+                    }
+                });
+                //manager.close();
                 return true;
-            }else if (action.equals("setOutputPower")) {
-                String power= args.getString(0);
-                this.setOutputPower(power,manager, callbackContext);
+            } else if (action.equals("setOutputPower")) {
+                final String power = args.getString(0);
+                cordova.getThreadPool().execute(new Runnable() {
+                    public void run() {
+                        setOutputPower(power,manager,callbackContext);
+                    }
+                });
+                //manager.close();
                 return true;
-                manager.close();
             }
-            return false;
-        }catch(Exception e){
-            callbackContext.error(e.getMessage());
         }
+        return false;
     }
 
     private void getEPCList(UhfManager manager,CallbackContext callbackContext) {
@@ -50,18 +56,18 @@ public class UHF extends CordovaPlugin {
             }
             JSONArray array = new JSONArray(epcList);
             callbackContext.success(array);
-
+            //manager.close();
         } catch (Exception e) {
             callbackContext.error(e.getMessage());
         }
     }
 
     private void setOutputPower(String power,UhfManager manager,CallbackContext callbackContext) {
-        try{
-            int p=Integer.parseInt(power);
-            if(manager.setOutputPower(p)){
+        try {
+            int p = Integer.parseInt(power);
+            if (manager.setOutputPower(p)) {
                 callbackContext.success();
-            }else{
+            } else {
                 callbackContext.error(0);
             }
         }catch (NumberFormatException e) {
