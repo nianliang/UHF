@@ -18,7 +18,6 @@ import com.handheld.UHF.UhfManager;
  */
 public class UHF extends CordovaPlugin {
     public static final String NOSUPPORT = "暂不支持UHF!";
-    UhfManager manager;
 
     @Override
     public boolean execute(String action, JSONArray args, CallbackContext callbackContext) throws JSONException {
