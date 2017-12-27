@@ -1,0 +1,22 @@
+<?xml version='1.0' encoding='utf-8'?>
+<plugin id="com.pactera.emtd.uhf" version="1.0.0" xmlns="http://apache.org/cordova/ns/plugins/1.0" xmlns:android="http://schemas.android.com/apk/res/android">
+    <name>UHF</name>
+    <js-module name="UHF" src="www/UHF.js">
+        <clobbers target="cordova.plugins.uhf" />
+    </js-module>
+    <platform name="android">
+        <config-file parent="/*" target="res/xml/config.xml">
+            <feature name="UHF">
+                <param name="android-package" value="com.pactera.emtd.uhf.UHF" /></feature>
+        </config-file>
+        <config-file parent="/*" target="AndroidManifest.xml"></config-file>
+        <source-file src="src/android/UHF.java" target-dir="src/com/pactera/emtd/uhf/UHF" />
+        <source-file src="src/android/libs/SerialPort.jar" target-dir="libs"/>
+        <source-file src="src/android/libs/uhf_1_com13_v1.0.jar" target-dir="libs"/>
+        <source-file src="src/android/libs/armeabi/libdevapi.so" target-dir="libs/armeabi"/>
+        <source-file src="src/android/libs/armeabi/libirdaSerialPort.so" target-dir="libs/armeabi"/>
+        <source-file src="src/android/libs/armeabi-v7a/libdevapi.so" target-dir="libs/armeabi-v7a"/>
+        <source-file src="src/android/libs/armeabi-v7a/libirdaSerialPort.so" target-dir="libs/armeabi-v7a"/>
+        <framework src="com.android.support:support-v4:24.1.1+"/>
+    </platform>
+</plugin>
